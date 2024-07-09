@@ -46,10 +46,6 @@
 					<artifactId>logback-classic</artifactId>
 					<groupId>ch.qos.logback</groupId>
 				</exclusion>
-				<!--                <exclusion>-->
-				<!--                    <groupId>org.springframework.boot</groupId>-->
-				<!--                    <artifactId>spring-boot-starter-tomcat</artifactId>-->
-				<!--                </exclusion>-->
 			</exclusions>
 		</dependency>
 
@@ -64,7 +60,6 @@
 		<dependency>
 			<groupId>jakarta.servlet</groupId>
 			<artifactId>jakarta.servlet-api</artifactId>
-			<!--            <version>4.0.2</version>-->
 			<version>6.0.0</version>
 			<scope>provided</scope>
 		</dependency>
@@ -105,31 +100,27 @@
 
 	<build>
 		<plugins>
-			<plugin>
-				<groupId>org.wildfly.plugins</groupId>
-				<artifactId>wildfly-maven-plugin</artifactId>
-				<version>5.0.0.Final</version>
-				<configuration>
-					<filename>${project.build.finalName}.war</filename>
-					<hostname>${deploy.wildfly.host}</hostname>
-					<port>${deploy.wildfly.port}</port>
-					<username>${deploy.wildfly.username}</username>
-					<password>${deploy.wildfly.password}</password>
-				</configuration>
-				<executions>
-					<execution>
-						<phase>install</phase>
-						<goals>
-							<goal>deploy</goal>
-						</goals>
-					</execution>
-					<!--                    <execution>-->
-					<!--                        <goals>-->
-					<!--                            <goal>package</goal>-->
-					<!--                        </goals>-->
-					<!--                    </execution>-->
-				</executions>
-			</plugin>
+			<!-- TODO: it could be used to automatically deploy the application -->
+<!--			<plugin>-->
+<!--				<groupId>org.wildfly.plugins</groupId>-->
+<!--				<artifactId>wildfly-maven-plugin</artifactId>-->
+<!--				<version>5.0.0.Final</version>-->
+<!--				<configuration>-->
+<!--					<filename>${project.build.finalName}.war</filename>-->
+<!--					<hostname>${deploy.wildfly.host}</hostname>-->
+<!--					<port>${deploy.wildfly.port}</port>-->
+<!--					<username>${deploy.wildfly.username}</username>-->
+<!--					<password>${deploy.wildfly.password}</password>-->
+<!--				</configuration>-->
+<!--				<executions>-->
+<!--					<execution>-->
+<!--						<phase>install</phase>-->
+<!--						<goals>-->
+<!--							<goal>deploy</goal>-->
+<!--						</goals>-->
+<!--					</execution>-->
+<!--				</executions>-->
+<!--			</plugin>-->
 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>

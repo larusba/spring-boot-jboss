@@ -1,20 +1,38 @@
 package it.larus.demo;
 
-import org.springframework.stereotype.Service;
+import javax.naming.InitialContext;
+import javax.sql.DataSource;
+import java.sql.Connection;
 
 public class DummyService {
 
     private static DummyService INSTANCE;
 
+    private final String input;
+
+    private DummyService(String input){
+        this.input = input;
+    }
+
     public static DummyService getInstance() {
         if (INSTANCE == null) {
-            INSTANCE = new DummyService();
+            try {
+                InitialContext context = new InitialContext();
+                final DataSource dataSource = (DataSource) context.lookup("java:jboss/datasources/ExampleDS");
+                try (final Connection connection = dataSource.getConnection();) {
+                    INSTANCE = new DummyService(connection.getMetaData().getDatabaseProductVersion());
+                }
+
+            } catch (Exception e) {
+                INSTANCE = new DummyService(e.getLocalizedMessage());
+                throw new RuntimeException(e);
+            }
         }
 
         return INSTANCE;
     }
 
     public String service() {
-        return "Hello World";
+        return this.input;
     }
 }

@@ -1,0 +1,15 @@
+services:
+  wildfly:
+    container_name: wildfly
+    build: .
+    volumes:
+     - "./wildfly-persistence:/bitnami/wildfly"
+    ports:
+      - '127.0.0.1:8080:8080'
+      - '127.0.0.1:9990:9990'
+    expose:
+      - "9990"
+      - "8080"
+    environment:
+      - WILDFLY_USERNAME=admin
+      - WILDFLY_PASSWORD=password
