@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>it.larus</groupId>
+	<artifactId>demo</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>war</packaging>
+
+	<name>jboss-wildfly-demo</name>
+	<description>Simple Hola application deployable to Wildfly</description>
+
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<!--        <version>2.2.0.RELEASE</version>-->
+		<version>3.2.3</version>
+		<relativePath/> <!-- lookup parent from repository -->
+	</parent>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<java.version>17</java.version>
+		<maven.version>3.6.3</maven.version>
+
+		<maven.compiler.source>17</maven.compiler.source>
+		<maven.compiler.target>17</maven.compiler.target>
+
+		<version.server>23.0.0.Final</version.server>
+		<version.cloud.fp>25.0.0.Final</version.cloud.fp>
+
+		<deploy.wildfly.host>127.0.0.1</deploy.wildfly.host>
+		<deploy.wildfly.port>9990</deploy.wildfly.port>
+		<deploy.wildfly.username>wildfly</deploy.wildfly.username>
+		<deploy.wildfly.password>w1ldFly!</deploy.wildfly.password>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+			<exclusions>
+				<exclusion>
+					<artifactId>logback-classic</artifactId>
+					<groupId>ch.qos.logback</groupId>
+				</exclusion>
+				<!--                <exclusion>-->
+				<!--                    <groupId>org.springframework.boot</groupId>-->
+				<!--                    <artifactId>spring-boot-starter-tomcat</artifactId>-->
+				<!--                </exclusion>-->
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-tomcat</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+
+		<!-- https://mvnrepository.com/artifact/jakarta.servlet/jakarta.servlet-api -->
+		<dependency>
+			<groupId>jakarta.servlet</groupId>
+			<artifactId>jakarta.servlet-api</artifactId>
+			<!--            <version>4.0.2</version>-->
+			<version>6.0.0</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- We need to include the javax.servlet API specs, the implementation will be provided by Wildfly / JBoss / Tomcat -->
+		<!--        <dependency>-->
+		<!--            <groupId>javax.servlet</groupId>-->
+		<!--            <artifactId>javax.servlet-api</artifactId>-->
+		<!--            <scope>provided</scope>-->
+		<!--        </dependency>-->
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter</artifactId>
+			<version>5.8.1</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.testcontainers</groupId>
+			<artifactId>testcontainers</artifactId>
+			<version>1.19.8</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.testcontainers</groupId>
+			<artifactId>junit-jupiter</artifactId>
+			<version>1.19.8</version>
+			<scope>test</scope>
+		</dependency>
+
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.wildfly.plugins</groupId>
+				<artifactId>wildfly-maven-plugin</artifactId>
+				<version>5.0.0.Final</version>
+				<configuration>
+					<filename>${project.build.finalName}.war</filename>
+					<hostname>${deploy.wildfly.host}</hostname>
+					<port>${deploy.wildfly.port}</port>
+					<username>${deploy.wildfly.username}</username>
+					<password>${deploy.wildfly.password}</password>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>install</phase>
+						<goals>
+							<goal>deploy</goal>
+						</goals>
+					</execution>
+					<!--                    <execution>-->
+					<!--                        <goals>-->
+					<!--                            <goal>package</goal>-->
+					<!--                        </goals>-->
+					<!--                    </execution>-->
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.8.1</version>
+				<configuration>
+					<source>17</source>
+					<target>17</target>
+				</configuration>
+			</plugin>
+
+			<!-- OPTIONAL: Remove this plugin to reduce the WAR file size. It's not needed to deploy in an external application server. -->
+			<!--            <plugin>-->
+			<!--                <groupId>org.springframework.boot</groupId>-->
+			<!--                <artifactId>spring-boot-maven-plugin</artifactId>-->
+			<!--            </plugin>-->
+		</plugins>
+	</build>
+</project>
