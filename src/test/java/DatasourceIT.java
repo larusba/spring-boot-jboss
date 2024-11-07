@@ -1,6 +1,11 @@
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.jboss.arquillian.container.test.api.Deployer;
 import org.jboss.arquillian.container.test.api.Deployment;
@@ -35,6 +40,7 @@ class DatasourceIT {
                 .addPackages(true, "it.larus.demo")
                 .addClass(DatasourceIT.class)
                 .addAsLibraries(libs)
+                .addAsResource("webapp/WEB-INF/jboss-web.xml")
                 .addAsResource("META-INF/persistence.xml")
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
                 .addAsResource("arquillian.xml");
@@ -44,7 +50,7 @@ class DatasourceIT {
     @Test
     void testJndi () {
         deployer.deploy("testDS");
-        try (CloseableHttpClient httpclient = HttpClients.createDefault()) {
+        try (CloseableHttpClient httpclient = HttpClientBuilder.create().build()) {
             HttpGet httpGet = new HttpGet(DsContainer.getContainerUrl());
             CloseableHttpResponse response1 = httpclient.execute(httpGet);
 
