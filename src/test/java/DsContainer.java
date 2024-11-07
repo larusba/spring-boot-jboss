@@ -48,4 +48,8 @@ public class DsContainer implements BeforeAllCallback, AfterAllCallback {
             started.set(true);
         }
     }
+
+    public static String getContainerUrl() {
+        return "http://" + jbossContainer.getHost() + ":" + jbossContainer.getMappedPort(8080) + "/testDS";
+    }
 }

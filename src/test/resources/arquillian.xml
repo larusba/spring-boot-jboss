@@ -1,8 +1,8 @@
 <arquillian xmlns="http://jboss.org/schema/arquillian">
-    <container qualifier="wildfly" default="true">
+    <container qualifier="wildfly-remote" default="true">
         <configuration>
-            <!-- Remote connection settings for WildFly -->s
-            <property name="host">${wildfly.address}/</property>
+            <!-- Remote connection settings for WildFly -->
+            <property name="host">${wildfly.address}</property>
             <property name="managementAddress">${wildfly.management.address}</property>
             <property name="managementPort">${wildfly.management.port}</property>
             <property name="username">admin</property>

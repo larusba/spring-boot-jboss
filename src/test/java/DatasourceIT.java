@@ -1,8 +1,13 @@
-import it.larus.demo.DummyService;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.jboss.arquillian.container.test.api.Deployer;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit5.ArquillianExtension;
+import org.jboss.arquillian.test.api.ArquillianResource;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.exporter.ZipExporter;
+import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 import org.junit.jupiter.api.Assertions;
@@ -15,12 +20,11 @@ import java.io.File;
 @ExtendWith(ArquillianExtension.class)
 class DatasourceIT {
 
-    @Deployment
+    @ArquillianResource
+    private Deployer deployer;
+
+    @Deployment(name = "testDS", managed = false)
     static WebArchive createDeployment() {
-        System.out.println("wildfly.address: " + System.getProperty("wildfly.address"));
-        System.out.println("wildfly.port: " + System.getProperty("wildfly.port"));
-        System.out.println("wildfly.management.address: " + System.getProperty("wildfly.management.address"));
-        System.out.println("wildfly.management.port: " + System.getProperty("wildfly.management.port"));
         File[] libs = Maven.resolver()
                 .loadPomFromFile("pom.xml")
                 .importRuntimeAndTestDependencies()
@@ -29,24 +33,31 @@ class DatasourceIT {
 
         WebArchive war = ShrinkWrap.create(WebArchive.class, "testDS.war")
                 .addPackages(true, "it.larus.demo")
+                .addClass(DatasourceIT.class)
                 .addAsLibraries(libs)
-                .addAsResource("arquillian.xml")
-                .addAsResource("WEB-INF/jboss-web.xml");
-
-        war.as(ZipExporter.class).exportTo(new File("target/testDS.war"), true);
-
+                .addAsResource("META-INF/persistence.xml")
+                .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
+                .addAsResource("arquillian.xml");
         return war;
     }
 
     @Test
     void testJndi () {
-        try {
-            DummyService ds = DummyService.getInstance();
-            String config = ds.service();
-            Assertions.assertNotNull(config);
-            System.out.println(config);
+        deployer.deploy("testDS");
+        try (CloseableHttpClient httpclient = HttpClients.createDefault()) {
+            HttpGet httpGet = new HttpGet(DsContainer.getContainerUrl());
+            CloseableHttpResponse response1 = httpclient.execute(httpGet);
+
+            Assertions.assertEquals(
+                    200,
+                    response1.getStatusLine().getStatusCode()
+            );
+            String response = new String(response1.getEntity().getContent().readAllBytes());
+            System.out.println(response);
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            deployer.undeploy("testDS");
         }
     }
 }
