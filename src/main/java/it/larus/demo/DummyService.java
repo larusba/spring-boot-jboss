@@ -19,7 +19,7 @@ public class DummyService {
             try {
                 InitialContext context = new InitialContext();
                 final DataSource dataSource = (DataSource) context.lookup("java:jboss/datasources/ExampleDS");
-                try (final Connection connection = dataSource.getConnection();) {
+                try (final Connection connection = dataSource.getConnection()) {
                     INSTANCE = new DummyService(connection.getMetaData().getDatabaseProductVersion());
                 }
 
