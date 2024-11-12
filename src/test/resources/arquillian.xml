@@ -1,0 +1,15 @@
+<arquillian xmlns="http://jboss.org/schema/arquillian">
+    <container qualifier="wildfly-remote" default="true">
+        <configuration>
+            <!-- Remote connection settings for WildFly -->
+            <property name="host">${wildfly.address}</property>
+            <property name="managementAddress">${wildfly.management.address}</property>
+            <property name="managementPort">${wildfly.management.port}</property>
+            <property name="username">admin</property>
+            <property name="password">password</property>
+        </configuration>
+        <protocol type="Servlet 3.0">
+            <property name="port">${wildfly.port}</property>
+        </protocol>
+    </container>
+</arquillian>

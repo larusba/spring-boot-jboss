@@ -1,0 +1,13 @@
+services:
+  wildfly:
+    container_name: wildfly
+    build: .
+    volumes:
+      - "./wildfly-persistence:/bitnami/wildfly"
+      - "./wildfly/configuration/:/opt/bitnami/wildfly/standalone/configuration/"
+    ports:
+      - '127.0.0.1:8080:8080'
+      - '127.0.0.1:9990:9990'
+    expose:
+      - "9990"
+      - "8080"
