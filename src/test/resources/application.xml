@@ -1,0 +1,9 @@
+<application>
+    <display-name>ear</display-name>
+    <module>
+        <web>
+            <web-uri>spring.war</web-uri>
+            <context-root>/demo</context-root>
+        </web>
+    </module>
+</application>

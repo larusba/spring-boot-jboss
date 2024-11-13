@@ -1,0 +1,15 @@
+<datasources>
+    <datasource enabled="true" jndi-name="java:jboss/datasources/PostgresDS" pool-name="PostgresDS">
+        <connection-url>jdbc:postgresql://postgresql:5432/postgres</connection-url>
+        <driver>postgresql-42.2.14.jar</driver>
+        <pool>
+            <min-pool-size>4</min-pool-size>
+            <initial-pool-size>4</initial-pool-size>
+            <max-pool-size>64</max-pool-size>
+        </pool>
+        <security>
+            <user-name>test</user-name>
+            <password>test</password>
+        </security>
+    </datasource>
+</datasources>
